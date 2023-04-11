@@ -1,42 +1,83 @@
 
 # Rapport
 
-**Skriv din rapport här!**
+Det första jag gjorde var att ändra appens namn, vilket görs i filen "res/values/strings.xml"
+I brist på annat fick den heta "MelkersApp".
 
-_Du kan ta bort all text som finns sedan tidigare_.
+XML Kod för att byta namn på appen:
+```
+<string name="app_name">MelkersApp</string>
+```
 
-## Följande grundsyn gäller dugga-svar:
-
-- Ett kortfattat svar är att föredra. Svar som är längre än en sida text (skärmdumpar och programkod exkluderat) är onödigt långt.
-- Svaret skall ha minst en snutt programkod.
-- Svaret skall inkludera en kort övergripande förklarande text som redogör för vad respektive snutt programkod gör eller som svarar på annan teorifråga.
-- Svaret skall ha minst en skärmdump. Skärmdumpar skall illustrera exekvering av relevant programkod. Eventuell text i skärmdumpar måste vara läsbar.
-- I de fall detta efterfrågas, dela upp delar av ditt svar i för- och nackdelar. Dina för- respektive nackdelar skall vara i form av punktlistor med kortare stycken (3-4 meningar).
-
-Programkod ska se ut som exemplet nedan. Koden måste vara korrekt indenterad då den blir lättare att läsa vilket gör det lättare att hitta syntaktiska fel.
+Efter det var det dags att möjliggöra internetanslutning i appen, då detta krävs för att visa
+den externa webbsidan. För att göra detta gick jag in i filen "manifests/AndroidManifest.xml"
+och lade till följande XML kod.
+```
+<uses-permission android:name="android.permission.INTERNET" />
+```
+Sedan var det dags att skapa min WebView, vilket man kan göra i filen "java/MainActivity.java".
+Koden i den här filen skrivs i Java, och blev som följer.
 
 ```
-function errorCallback(error) {
-    switch(error.code) {
-        case error.PERMISSION_DENIED:
-            // Geolocation API stöds inte, gör något
-            break;
-        case error.POSITION_UNAVAILABLE:
-            // Misslyckat positionsanrop, gör något
-            break;
-        case error.UNKNOWN_ERROR:
-            // Okänt fel, gör något
-            break;
+// Inuti klassen
+private WebView myWebView;
+
+// Inuti onCreate()
+myWebView = findViewById(R.id.my_webview);
+myWebView.setWebViewClient(new WebViewClient());
+myWebView.getSettings().setJavaScriptEnabled(true);
+```
+Först skapas ett privat objekt kallat myWebView av klassen WebView. Inuti metoden "onCreate()" 
+instansierar jag objektet med hjälp av metoden findViewById() och fäster en ny WebClient på 
+den. För att sidorna ska kunna visas måste även exekevering av JavaScript fungera. Detta möjliggörs genom
+inställningen setJavaScriptEnabled(true) som åkallas via getSettings().
+
+När man kommer in på appen finns det en meny med två alternativ, "External Web Page" och "Internal Web Page".
+För att dessa alternativ ska vara väljbara fick jag ändra i metoden onOptionItemSelected() inuti MainActivity.
+Där finns två if satser med kod som körs om respektive alternativ trycks. Under dessa if satser kallar jag
+på metoderna showExternalWebPage() och showInternalWebPage(). 
+
+```
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_external_web) {
+            Log.d("==>","Will display external web page");
+            showExternalWebPage();
+            return true;
+        }
+
+        if (id == R.id.action_internal_web) {
+            Log.d("==>","Will display internal web page");
+            showInternalWebPage();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
-}
+```
+För att något ska hända när man trycker måste man även implementera metoderna. Inuti respektive metod
+använder jag metoden loadUrl(), som tar länken till hemsidan som argument. För den interna webbsidan skrev jag in
+html-filens sökväg.
+
+```
+    public void showExternalWebPage(){
+        myWebView.loadUrl("https://his.se");
+    }
+
+    public void showInternalWebPage(){
+        myWebView.loadUrl("file:///android_asset/internalwebpage.html");
+    }
 ```
 
-Bilder läggs i samma mapp som markdown-filen.
+Min interna webbsida gör jag i notepad och lägger till lite simpel text.
 
-![](android.png)
+![](InternalWebpage.png)
 
-Läs gärna:
+För den externa webbsidan valde jag his.se.
 
-- Boulos, M.N.K., Warren, J., Gong, J. & Yue, P. (2010) Web GIS in practice VIII: HTML5 and the canvas element for interactive online mapping. International journal of health geographics 9, 14. Shin, Y. &
-- Wunsche, B.C. (2013) A smartphone-based golf simulation exercise game for supporting arthritis patients. 2013 28th International Conference of Image and Vision Computing New Zealand (IVCNZ), IEEE, pp. 459–464.
-- Wohlin, C., Runeson, P., Höst, M., Ohlsson, M.C., Regnell, B., Wesslén, A. (2012) Experimentation in Software Engineering, Berlin, Heidelberg: Springer Berlin Heidelberg.
+![](ExternalWebpage.png)
