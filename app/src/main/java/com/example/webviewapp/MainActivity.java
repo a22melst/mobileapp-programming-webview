@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showInternalWebPage(){
-        myWebView.loadUrl("file:///android_asset/img/easter.jpg");
+        myWebView.loadUrl("file:///android_asset/internalwebpage.html");
     }
 
     @Override
