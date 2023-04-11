@@ -74,10 +74,12 @@ html-filens sökväg.
     }
 ```
 
+(Fick det inte att fungera med att skriva ![](bildnamn.png) så jag la in bilderna direkt på github)
+
 Min interna webbsida gör jag i notepad och lägger till lite simpel text.
 
-![](InternalWebpage.png)
+![](InternalWebpage.png)![InternalWebpage](https://user-images.githubusercontent.com/129266288/231229567-b834817b-5f22-4340-aec2-769057a6e089.png)
 
 För den externa webbsidan valde jag his.se.
 
-![](ExternalWebpage.png)
+![ExternalWebpage](https://user-images.githubusercontent.com/129266288/231229517-8b188f96-a1cd-4d03-803a-ff91132fe4bb.png)
